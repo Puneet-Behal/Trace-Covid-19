@@ -118,15 +118,21 @@
   </style>
 </head>
 
+
 <script
   src="https://maps.google.com/maps/api/js?key=AIzaSyCW4LttwGBwKM7a-f5Z_czyOI8QTi9xaao&libraries=places,geometry&callback=initAutocomplete"
-  async defer></script>
+  async defer>
+//initcallback is to get data on search input box for tagging places ...
+</script>
+
+  
 <script>
-  // var DATA_SERVICE_URL="https://script.google.com/macros/s/AKfycbyuj6-08CZN7oKIniSjdSr6xYkGb0alPByJfGt57peXwKzmCCo/exec?key=AIzaSyDMTE1ZoUG70vo_Md4LQwOoORht9xX68FM&sheet=info&jsonp=callback";
-
+  
+  //add macro url of Ist spread sheet getting data from travel_covid_19
+  //var DATA_SERVICE_URL_MARKER = "https://script.google.com/macros/s/AKfycbyuj6-08CZN7oKIniSjdSr6xYkGb0alPByJfGt57peXwKzmCCo/exec?key=AIzaSyDMTE1ZoUG70vo_Md4LQwOoORht9xX68FM&jsonp=markerCallback";
   //add macro url of second spread sheet getting data from cluster_covid_19
-  var DATA_SERVICE_URL_CLUSTER = "https://script.google.com/macros/s/AKfycbyuj6-08CZN7oKIniSjdSr6xYkGb0alPByJfGt57peXwKzmCCo/exec?key=AIzaSyDMTE1ZoUG70vo_Md4LQwOoORht9xX68FM&sheet=clusters&jsonp=clusterCallback";
-
+  //var DATA_SERVICE_URL_CLUSTER = "https://script.google.com/macros/s/AKfycbyuj6-08CZN7oKIniSjdSr6xYkGb0alPByJfGt57peXwKzmCCo/exec?key=AIzaSyDMTE1ZoUG70vo_Md4LQwOoORht9xX68FM&sheet=clusters&jsonp=clusterCallback";
+ 
   var geocoder;
   var map;
 
@@ -141,22 +147,21 @@
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
-    //Inject JavaScript (returned JSON) into the head of the page from Ist spreadsheet.
+    //Inject JavaScript (returned JSON) into the head of the page from Ist spreadsheet and call function as callback 
     // var scriptElement=document.createElement('script');
-    // scriptElement.src=DATA_SERVICE_URL;
+    // scriptElement.src=DATA_SERVICE_URL_MARKER;
     // document.getElementsByTagName('head')[0].appendChild(scriptElement);
 
 
-    //Inject JavaScript (returned JSON) into the head of the page from second spreadsheet.
-    var scriptElementCluster = document.createElement('script');
-    scriptElementCluster.src = DATA_SERVICE_URL_CLUSTER;
-    document.getElementsByTagName('head')[0].appendChild(scriptElementCluster);
+    //Inject JavaScript (returned JSON) into the head of the page from second spreadsheet and call function as clusterCallback 
+    // var scriptElementCluster = document.createElement('script');
+    // scriptElementCluster.src = DATA_SERVICE_URL_CLUSTER;
+    // document.getElementsByTagName('head')[0].appendChild(scriptElementCluster);
   }
 
-  function callback(data) {
+  function markerCallback(data) {
     for (var i = 1; i < data.length; i++) {
       address = data[i][2];
-
       //Geocode the JSON returned from callback function.
       codeAddress();
     }
@@ -164,51 +169,9 @@
   }
 
   function clusterCallback(data) {
-    console.log(data);
-    //     var clusterMap = {
-    //     AdarshNagar: {
-    //       center: {lat: 41.878, lng: -87.629},
-    //       infected_cases: 2714,
-    //       suspected_cases : 21890
-    //     },
-    //     Sangli: {
-    //       center: {lat: 40.714, lng: -74.005},
-    //       infected_cases: 8405,
-    //       suspected_cases : 2718
-    //     },
-    //     Rohtak: {
-    //       center: {lat: 34.052, lng: -118.243},
-    //       infected_cases: 3857,
-    //       suspected_cases : 27180
-    //     },
-    //     Merutt: {
-    //       center: {lat: 49.25, lng: -123.1},
-    //       infected_cases: 6032,
-    //       suspected_cases : 27180          
-    //     }
-    //   };
-    // var data = JSON.parse(data);
-    //     for (var i=1;i<data.length;i++) {
-
-    //        // Create clusterMap similar to above data from data object retreived from spreadsheet with belows syntax 
-    //        // split the center_Coordinates in two parts based on space            
-    //       cluster_label = {
-    //             center: [{
-    //               lat: data[2][i],
-    //               lng: data[2][i]
-    //               }],
-    //             infected_cases: data[3][i],
-    //             suspected_cases: data[4][i] 
-    //         }
-
-    //        // once above formed
-    //       // clusterMap= data ;
-
-    //         //Geocode the JSON returned from callback function.  
-    //     }
-    var clusterMap = data;
-    createCirclesForInfectedCasesInMap(clusterMap);
-    createCirclesForSuspectedCasesInMap(clusterMap);
+    console.log(data);    
+    createCirclesForInfectedCasesInMap(data);
+    createCirclesForSuspectedCasesInMap(data);
   }
 
   function codeAddress() {
@@ -223,7 +186,8 @@
           map: map
         });
       } else {
-        alert('Geocode was not successful for the following reason:' + status);
+        //Commenting to avoid so many errors 
+        //alert('Geocode was not successful for the following reason:' + status);
       }
     });
 
