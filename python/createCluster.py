@@ -92,7 +92,6 @@ for case, group in casesCluster:
   cluster_infected_cases.append(infected_count)
   suspected_count = statusCluster['Suspected']
   cluster_suspected_cases.append(suspected_count)
-  
          
 print(cluster_infected_cases)
 print(cluster_suspected_cases)
@@ -101,10 +100,10 @@ clusterColumns = ['cluster_label', 'cluster_center_coordinates','cluster_infecte
 
 clusterSet = pd.DataFrame(list(zip(cluster_Labels, centers,cluster_infected_cases,cluster_suspected_cases)), 
                columns =clusterColumns) 
-clusterSet["cluster_label"].fillna(int(9), inplace = True) 
-clusterSet["cluster_center_coordinates"].fillna(int(9), inplace = True)
-clusterSet["cluster_infected_cases"].fillna(int(0), inplace = True)
-clusterSet["cluster_suspected_cases"].fillna(int(0), inplace = True)
+#clusterSet["cluster_label"].fillna(" ", inplace = True) 
+#clusterSet["cluster_center_coordinates"].fillna(" ", inplace = True)
+#lusterSet["cluster_infected_cases"].fillna(" ", inplace = True)
+#clusterSet["cluster_suspected_cases"].fillna(" ", inplace = True)
 print(clusterSet)
 
 d2g.upload(clusterSet, '1jRfthUvnAiP4d9OzF6B7ZKyOLgg2cGNXygvy7dLS6Ow', wks_name='Cluster_Covid_19', credentials=creds, row_names=True)
