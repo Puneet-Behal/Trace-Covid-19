@@ -4,12 +4,23 @@ var SHEET_NAME = 'Track Covid-19';
 var SHEET_NAME_2 = 'Cluster_Covid_19';
 
 function doGet(request) {
+   Logger.log(JSON.stringify(request));
   var callback = request.parameters.json;
-  var range = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME).getDataRange();
- // var secondSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheets()[1];
-  var json = '('+Utilities.jsonStringify(range.getValues())+')';
+  var sheet = "";
+  var range = [];
   
-  return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JAVASCRIPT);
+  if(request.parameters.sheet == "markers"){
+   sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+    range = sheet.getDataRange();
+  }
+  if(request.parameters.sheet == "clusters"){
+     sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME_2);
+     range = sheet.getDataRange();
+  }
+ // var secondSheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheets()[1];
+  var json = range.getValues();
+  
+  return ContentService.createTextOutput(request.parameters.jsonp + '(' + JSON.stringify(json) + ')').setMimeType(ContentService.MimeType.JAVASCRIPT);
 }
 
 //function doGet(request) {
@@ -30,6 +41,41 @@ function doGet(request) {
  //   return ContentService.createTextOutput(response.getContentText());
 //}
 
+//Snippets.prototype.appendValues = function(spreadsheetId, range,
+//    valueInputOption, _values) {
+//  // [START sheets_append_values]
+//  var values = [
+//    [
+//      // Cell values ...
+//    ]
+//    // Additional rows ...
+//  ];
+//  // [START_EXCLUDE silent]
+//  values = _values;
+//  // [END_EXCLUDE]
+//  var valueRange = Sheets.newRowData();
+//  valueRange.values = values;
+//
+//  var appendRequest = Sheets.newAppendCellsRequest();
+//  appendRequest.sheetId = spreadsheetId;
+//  appendRequest.rows = [valueRange];
+//
+//  var result = Sheets.Spreadsheets.Values.append(valueRange, spreadsheetId, range, {
+//    valueInputOption: valueInputOption
+//  });
+//  // [END sheets_append_values]
+//  return result;
+//};
 
-
-
+//function setDataToTable(data) {
+//	var range = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME).getDataRange();
+//    var sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+// // var data =  Utilities.jsonParse(response.getContentText());
+////  var data = JSON.parse(response.getContentText());
+//  for (var i=1;i<data.length;i++) {
+//    var rows = [data.travel_history[i][8], " ", data.travel_history[i][2]]; 
+//    
+//    sheet.getRange(sheet.getLatRow(), sheet.getLastColumn(), rows.length, rows[0].length).setValues(rows);
+//  }
+	
+//}
